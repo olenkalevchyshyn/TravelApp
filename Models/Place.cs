@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Entities;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,9 @@ namespace TravelApp.Models
 
         [BsonElement("longitude")]
         public double Longitude { get; set; }
+
+        //[BsonElement("coordinates")]
+        //public Coordinates2D Coordinates { get; set; }
 
         [BsonElement("lists")]
         public List<ObjectId> BucketLists { get; set; }

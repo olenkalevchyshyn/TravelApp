@@ -30,5 +30,13 @@ C:\Users\olenk\source\repos\TravelApp\bin\Debug\netcoreapp3.1\Microsoft.Extensio
 C:\Users\olenk\source\repos\TravelApp\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Options.dll
 C:\Users\olenk\source\repos\TravelApp\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Primitives.dll
 C:\Users\olenk\source\repos\TravelApp\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\olenk\source\repos\TravelApp\bin\Debug\netcoreapp3.1\MongoDB.Entities.dll
+C:\Users\olenk\source\repos\TravelApp\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\olenk\source\repos\TravelApp\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\olenk\source\repos\TravelApp\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Logging.dll
+C:\Users\olenk\source\repos\TravelApp\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.dll
+C:\Users\olenk\source\repos\TravelApp\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\olenk\source\repos\TravelApp\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
+C:\Users\olenk\source\repos\TravelApp\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\olenk\source\repos\TravelApp\obj\Debug\netcoreapp3.1\TravelApp.csproj.CoreCompileInputs.cache
 C:\Users\olenk\source\repos\TravelApp\obj\Debug\netcoreapp3.1\TravelApp.MvcApplicationPartsAssemblyInfo.cache

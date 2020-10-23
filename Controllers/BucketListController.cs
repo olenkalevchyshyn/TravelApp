@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -6,110 +7,90 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TravelApp.Models;
+using TravelApp.Services;
 
 namespace TravelApp.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class BucketListController
+    public class BucketListController : ControllerBase
     {
-        private string collectionName = "Lists";
-        private IMongoCollection<BucketList> _bucketList;
+        private readonly BucketListService _bucketListService;
 
-        public BucketListController(IMongoClient client)
+        public BucketListController(BucketListService bucketListService)
         {
-            var database = client.GetDatabase("TravelAppDb");
-            _bucketList = database.GetCollection<BucketList>(collectionName);
+            _bucketListService = bucketListService;
         }
 
         //get bucketlist by id
-        // https://localhost:44347/api/BucketList/5f8c6e7c3089b5481697bb3b
-        [HttpGet("{bucketListId}")]
-        public ActionResult<BucketList> GetById(string bucketListId)
+        // https://localhost:44347/api/BucketList/5f8c6e7ce40b82c4840ad154
+        [HttpGet("{bucketListId}", Name = "GetBucketList")]
+        public ActionResult<BucketList> Get(string bucketListId)
         {
-            //if (bucketListId == null)
-            //    return NotFound();
             ObjectId id = new ObjectId(bucketListId);
-            //if (id == null)
-            //    return NotFound();
-            var filter = Builders<BucketList>.Filter.Eq("Id", id);
-            var bucketList = _bucketList.Find(filter);
-            //if (bucketList == null)
-            //    return NotFound();
-            return bucketList.FirstOrDefault();
+            if (id != null)
+                return _bucketListService.Get(id);
+            else
+                return NotFound();
         }
 
         //get places by bucketlist id
-        // https://localhost:44347/api/BucketList/5f8c6e7c3089b5481697bb3b/All
+        // https://localhost:44347/api/BucketList/5f8c6e7c5cf6b6d3a0b99215/All
         [HttpGet("{bucketListId}/All")]
         public ActionResult<IEnumerable<Place>> GetPlacesById(string bucketListId)
         {
-            //if (bucketListId == null)
-            //    return NotFound();
             ObjectId id = new ObjectId(bucketListId);
-            //if (id == null)
-            //    return  NotFound();
-            var filter = Builders<BucketList>.Filter.Eq("Id", id);
-            var bucketList = _bucketList.Find(filter).FirstOrDefault();
-            var places = bucketList.Places;
-            //if (places == null)
-            //    return NotFound();
-            return places.ToList();
-        }
-
-        //gey all user`s bucketlists
-        //https://localhost:44347/api/BucketList/GetAllbyUserId/5f8c6cf161d7659726aa03a8
-        [HttpGet("GetAllbyUserId/{userId}")]
-        public ActionResult<IEnumerable<BucketList>> GetAllbyUserId(string userId) 
-        {
-            //if (userId == null)
-            //    return NotFound();
-            ObjectId id = new ObjectId(userId);
-            //if (id == null)
-            //    return NotFound();
-            var filter = Builders<BucketList>.Filter.Eq("UserId", id);
-            var collection = _bucketList.Find(filter);
-            //if (collection == null)
-            //    return NotFound();
-            return collection.ToList();
-        }
+            if (id != null)
+                return _bucketListService.GetPlaces(id).ToList();
+            else
+                return NotFound();
+        }        
 
         [HttpPost]
-        public void InsertBucketList(BucketList bucketList) //return ActionResult
+        public ActionResult Post(BucketList bucketList)
         {
-            //if (bucketList == null)
-            //    return NotFound();
-            _bucketList.InsertOne(bucketList);
-            //return CreatedAtRoute("GetById", new { id = bucketList.Id }, bucketList);
-        }
-        [HttpPost]
-        public void InsertBucketLists(List<BucketList> bucketLists)
-        {
-            //if (bucketLists == null)
-            //    return NotFound();
-            _bucketList.InsertMany(bucketLists);            
+            if (bucketList != null)
+            {
+                _bucketListService.Create(bucketList);
+                return CreatedAtRoute("GetBucketList", new { id = bucketList.Id }, bucketList);
+            }
+            else
+                return NotFound();
         }
 
-        [HttpPut("bucketListId")]
-        public void UpdateBucketList(BucketList bucketList) //return ActionResult
+        [HttpPut("id")]
+        public ActionResult Put(string bucketListId)
         {
-            //if (bucketListId == null || bucketList == null)
-            //    return NotFound();
-            _bucketList.ReplaceOne(
-                new BsonDocument("_id", bucketList.Id),
-                bucketList,
-                new ReplaceOptions { IsUpsert = true });
-            //return NoContent();
+            ObjectId id = new ObjectId(bucketListId);
+            if (id != null)
+            {
+                var bucketList = _bucketListService.Get(id);
+                if (bucketList != null)
+                    _bucketListService.Update(id, bucketList);
+                else
+                    return NotFound();
+            }
+            else
+                return NotFound();
+            return NoContent();
         }
 
         [HttpDelete("bucketListId")]
-        public void DeleteBucketList(ObjectId bucketListId)  //return ActionResult
+        public ActionResult DeleteBucketList(string bucketListId)
         {
-            //if (bucketListId == null)
-            //    return NotFound();
-            var filter = Builders<BucketList>.Filter.Eq("Id", bucketListId);
-            _bucketList.DeleteOne(filter);
-            //return NoContent();
+            ObjectId id = new ObjectId(bucketListId);
+            if (id != null)
+            {
+                var bucketList = _bucketListService.Get(id);
+                if (bucketList != null)
+                    _bucketListService.Delete(bucketList);
+                else
+                    return NotFound();
+            }
+            else
+                return NotFound();
+            return NoContent();
         }
     }
 }
